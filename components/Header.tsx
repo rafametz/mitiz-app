@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useCart } from "@/lib/cart-context";
 
@@ -18,17 +19,21 @@ export function Header() {
   const totalItens = items.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <header className="bg-preto-wagyu text-branco-sal">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-        <Link href="/" className="text-lg font-bold tracking-wide">
-          MITIZ
-          <span className="ml-2 text-xs font-normal text-cinza-osso">
-            Boutique de Carnes
-          </span>
+    <header className="border-b border-cinza-osso bg-branco-sal">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src="/mitiz-logo.svg"
+            alt="MITIZ Boutique de Carnes"
+            width={48}
+            height={41}
+            className="h-11 w-auto"
+            priority
+          />
         </Link>
 
         <button
-          className="text-branco-sal sm:hidden"
+          className="text-preto-wagyu sm:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Abrir menu"
         >
@@ -40,7 +45,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm hover:text-vermelho-brasa"
+              className="text-sm text-preto-wagyu hover:text-vermelho-brasa"
             >
               {link.label}
             </Link>
@@ -55,12 +60,12 @@ export function Header() {
       </div>
 
       {open && (
-        <nav className="flex flex-col gap-3 border-t border-cinza-ferro px-4 py-4 sm:hidden">
+        <nav className="flex flex-col gap-3 border-t border-cinza-osso px-4 py-4 sm:hidden">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm"
+              className="text-sm text-preto-wagyu"
               onClick={() => setOpen(false)}
             >
               {link.label}

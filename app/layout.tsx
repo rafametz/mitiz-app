@@ -1,17 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
 import { Header } from "@/components/Header";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const outfit = localFont({
+  src: "./fonts/Outfit-VariableFont_wght.ttf",
+  variable: "--font-outfit",
+  weight: "100 900",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const aleo = localFont({
+  src: [
+    { path: "./fonts/Aleo-VariableFont_wght.ttf", style: "normal" },
+    { path: "./fonts/Aleo-Italic-VariableFont_wght.ttf", style: "italic" },
+  ],
+  variable: "--font-aleo",
+  weight: "100 900",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -27,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${outfit.variable} ${aleo.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <CartProvider>
