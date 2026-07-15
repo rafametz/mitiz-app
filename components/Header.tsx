@@ -19,12 +19,27 @@ export function Header() {
   const supabase = useMemo(() => createClient(), []);
   const [open, setOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const totalItens = items.reduce((sum, i) => sum + i.quantity, 0);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setLoggedIn(!!data.user));
+    async function loadAuthState(userId: string | undefined) {
+      setLoggedIn(!!userId);
+      if (!userId) {
+        setIsAdmin(false);
+        return;
+      }
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .maybeSingle();
+      setIsAdmin(profile?.role === "admin");
+    }
+
+    supabase.auth.getUser().then(({ data }) => loadAuthState(data.user?.id));
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-      setLoggedIn(!!session?.user);
+      loadAuthState(session?.user?.id);
     });
     return () => subscription.subscription.unsubscribe();
   }, [supabase]);
@@ -65,6 +80,14 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="text-sm font-semibold text-vinho-defumado hover:text-vermelho-brasa"
+            >
+              Painel Admin
+            </Link>
+          )}
           <Link
             href={accountLink.href}
             className="text-sm text-preto-wagyu hover:text-vermelho-brasa"
@@ -92,6 +115,15 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="text-sm font-semibold text-vinho-defumado"
+              onClick={() => setOpen(false)}
+            >
+              Painel Admin
+            </Link>
+          )}
           <Link
             href={accountLink.href}
             className="text-sm text-preto-wagyu"
