@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useCart } from "@/lib/cart-context";
 import { formatBRL } from "@/lib/format";
@@ -102,10 +103,15 @@ export default function OrcamentoPage() {
 
   if (sent) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-preto-wagyu">
-          Orçamento enviado!
-        </h1>
+      <div className="mx-auto max-w-xl px-4 py-20 text-center">
+        <Image
+          src="/mitiz-simbolo.svg"
+          alt=""
+          width={64}
+          height={78}
+          className="mx-auto h-16 w-auto"
+        />
+        <h1 className="mt-6 text-2xl text-preto-wagyu">Orçamento enviado!</h1>
         <p className="mt-3 text-cinza-ferro">
           Recebemos seu pedido e abrimos o WhatsApp para você confirmar direto
           com a gente. Em breve entraremos em contato.
@@ -115,8 +121,9 @@ export default function OrcamentoPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-preto-wagyu">Meu Orçamento</h1>
+    <div className="mx-auto max-w-2xl px-4 py-10">
+      <p className="eyebrow text-vermelho-brasa">Quase lá</p>
+      <h1 className="mt-2 mb-6 text-3xl text-preto-wagyu">Meu Orçamento</h1>
 
       {items.length === 0 ? (
         <p className="text-cinza-ferro">
@@ -136,7 +143,7 @@ export default function OrcamentoPage() {
             {items.map((item) => (
               <li
                 key={item.productId}
-                className="flex items-center justify-between gap-3 rounded-lg border border-cinza-osso p-3"
+                className="flex items-center justify-between gap-3 rounded-lg border border-cinza-osso bg-marmoreio p-3"
               >
                 <div>
                   <p className="font-semibold text-preto-wagyu">{item.name}</p>
@@ -144,7 +151,7 @@ export default function OrcamentoPage() {
                     {formatBRL(item.unitPrice)} / {item.unitType}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <input
                     type="number"
                     min={0.1}
@@ -153,7 +160,7 @@ export default function OrcamentoPage() {
                     onChange={(e) =>
                       updateQuantity(item.productId, Number(e.target.value))
                     }
-                    className="w-20 rounded border border-cinza-osso px-2 py-1"
+                    className="w-20 rounded border border-cinza-osso bg-branco-sal px-2 py-1"
                   />
                   <button
                     onClick={() => removeItem(item.productId)}
@@ -166,9 +173,10 @@ export default function OrcamentoPage() {
             ))}
           </ul>
 
-          <p className="mb-6 text-right text-lg font-bold text-preto-wagyu">
-            Total estimado: {formatBRL(total)}
-          </p>
+          <div className="mb-6 flex items-center justify-between rounded-lg bg-preto-wagyu px-5 py-4 text-branco-sal">
+            <span className="eyebrow text-cinza-osso">Total estimado</span>
+            <span className="price-tag text-xl">{formatBRL(total)}</span>
+          </div>
 
           <div className="flex flex-col gap-3">
             <input
@@ -195,7 +203,7 @@ export default function OrcamentoPage() {
             <button
               onClick={handleSubmit}
               disabled={sending}
-              className="rounded-full bg-vermelho-brasa px-6 py-3 font-semibold text-branco-sal hover:bg-sangue-nobre disabled:opacity-50"
+              className="rounded-full bg-vermelho-brasa px-6 py-3 font-semibold text-branco-sal shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-sangue-nobre disabled:opacity-50"
             >
               {sending ? "Enviando..." : "Enviar orçamento pelo WhatsApp"}
             </button>

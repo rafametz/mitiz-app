@@ -81,15 +81,17 @@ export default function CalculadoraPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="mb-2 text-2xl font-bold text-preto-wagyu">
+    <div className="mx-auto max-w-3xl px-4 py-10">
+      <p className="eyebrow text-vermelho-brasa">Calcule sem desperdício</p>
+      <h1 className="mt-2 mb-2 text-3xl text-preto-wagyu">
         Calculadora de Churrasco
       </h1>
-      <p className="mb-6 text-cinza-ferro">
-        Informe quantas pessoas vão participar e quais carnes deseja servir.
+      <p className="mb-8 max-w-md text-cinza-ferro">
+        Informe quantas pessoas vão participar e quais carnes deseja servir —
+        a gente calcula a quantidade certa pra cada corte.
       </p>
 
-      <div className="mb-6 grid grid-cols-2 gap-4">
+      <div className="mb-8 grid grid-cols-2 gap-4 rounded-lg border border-cinza-osso bg-marmoreio p-4">
         <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
           Adultos
           <input
@@ -97,7 +99,7 @@ export default function CalculadoraPage() {
             min={0}
             value={adults}
             onChange={(e) => setAdults(Number(e.target.value))}
-            className="rounded border border-cinza-osso px-3 py-2"
+            className="rounded border border-cinza-osso bg-branco-sal px-3 py-2"
           />
         </label>
         <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
@@ -107,7 +109,7 @@ export default function CalculadoraPage() {
             min={0}
             value={children}
             onChange={(e) => setChildren(Number(e.target.value))}
-            className="rounded border border-cinza-osso px-3 py-2"
+            className="rounded border border-cinza-osso bg-branco-sal px-3 py-2"
           />
         </label>
       </div>
@@ -116,18 +118,16 @@ export default function CalculadoraPage() {
         <p className="text-cinza-ferro">Carregando...</p>
       ) : (
         <>
-          <p className="mb-2 text-sm font-semibold text-preto-wagyu">
-            Quais carnes você quer servir?
-          </p>
+          <p className="eyebrow mb-3 text-preto-wagyu">Quais carnes você quer servir?</p>
           <div className="mb-8 flex flex-wrap gap-2">
             {rules.map((rule) => (
               <button
                 key={rule.id}
                 onClick={() => toggleType(rule.meat_type)}
-                className={`rounded-full border px-4 py-2 text-sm ${
+                className={`rounded-full border px-4 py-2 text-sm transition ${
                   selectedTypes.includes(rule.meat_type)
-                    ? "border-vermelho-brasa bg-vermelho-brasa text-branco-sal"
-                    : "border-cinza-osso text-cinza-ferro"
+                    ? "border-vermelho-brasa bg-vermelho-brasa text-branco-sal shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]"
+                    : "border-cinza-osso text-cinza-ferro hover:border-preto-wagyu"
                 }`}
               >
                 {MEAT_LABELS[rule.meat_type]}
@@ -136,25 +136,31 @@ export default function CalculadoraPage() {
           </div>
 
           {results.length > 0 && (
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               {results.map(({ type, kg, suggestedProducts }) => (
-                <div key={type} className="rounded-lg border border-cinza-osso p-4">
-                  <h3 className="font-semibold text-preto-wagyu">
-                    {MEAT_LABELS[type]}: ~{kg.toFixed(2)} kg
-                  </h3>
+                <div key={type} className="rounded-lg border border-cinza-osso bg-marmoreio p-4">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="font-semibold text-preto-wagyu">{MEAT_LABELS[type]}</h3>
+                    <span className="price-tag rounded-sm bg-preto-wagyu px-2.5 py-1 text-sm text-branco-sal">
+                      ~{kg.toFixed(2)} kg
+                    </span>
+                  </div>
                   {suggestedProducts.length > 0 ? (
-                    <ul className="mt-3 flex flex-col gap-2">
+                    <ul className="flex flex-col gap-2">
                       {suggestedProducts.map((p) => (
                         <li
                           key={p.id}
-                          className="flex items-center justify-between gap-3 text-sm"
+                          className="flex items-center justify-between gap-3 rounded border border-cinza-osso bg-branco-sal px-3 py-2 text-sm"
                         >
-                          <span>
-                            {p.name} — {formatBRL(p.price_per_unit)}/{p.unit_type}
+                          <span className="text-preto-wagyu">
+                            {p.name}{" "}
+                            <span className="text-cinza-ferro">
+                              — {formatBRL(p.price_per_unit)}/{p.unit_type}
+                            </span>
                           </span>
                           <button
                             onClick={() => handleAdd(p, kg)}
-                            className="rounded-full bg-preto-wagyu px-3 py-1 text-xs font-semibold text-branco-sal hover:bg-cinza-ferro"
+                            className="rounded-full bg-vermelho-brasa px-3 py-1 text-xs font-semibold text-branco-sal hover:bg-sangue-nobre"
                           >
                             {added[p.id] ? "Adicionado!" : "Adicionar"}
                           </button>
@@ -162,7 +168,7 @@ export default function CalculadoraPage() {
                       ))}
                     </ul>
                   ) : (
-                    <p className="mt-2 text-sm text-cinza-ferro">
+                    <p className="text-sm text-cinza-ferro">
                       Nenhum produto cadastrado para este tipo ainda.
                     </p>
                   )}
@@ -171,7 +177,7 @@ export default function CalculadoraPage() {
 
               <Link
                 href="/orcamento"
-                className="w-fit rounded-full bg-vermelho-brasa px-6 py-3 font-semibold text-branco-sal hover:bg-sangue-nobre"
+                className="mt-2 w-fit rounded-full bg-vermelho-brasa px-6 py-3 font-semibold text-branco-sal shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-sangue-nobre"
               >
                 Ir para o orçamento
               </Link>

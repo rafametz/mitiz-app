@@ -32,3 +32,35 @@ body {
 h1, h2, h3 {
   font-family: var(--font-heading), Georgia, serif;
 }
+
+.eyebrow {
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.price-tag {
+  display: inline-block;
+  transform: rotate(-2deg);
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes ember-pulse {
+    0%, 100% {
+      opacity: 0.16;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.26;
+      transform: scale(1.035);
+    }
+  }
+
+  .animate-ember {
+    animation: ember-pulse 4.5s ease-in-out infinite;
+  }
+}

@@ -10,8 +10,8 @@ export function PromotionCard({ promotion }: { promotion: Promotion }) {
         })} OFF`;
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg border border-cinza-osso bg-branco-sal">
-      <div className="aspect-video w-full bg-marmoreio">
+    <div className="flex flex-col overflow-hidden rounded-lg border border-cinza-osso bg-marmoreio">
+      <div className="aspect-video w-full bg-cinza-osso">
         {promotion.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -21,8 +21,8 @@ export function PromotionCard({ promotion }: { promotion: Promotion }) {
           />
         ) : null}
       </div>
-      <div className="flex flex-col gap-1 p-4">
-        <span className="w-fit rounded-full bg-vermelho-brasa px-3 py-1 text-xs font-bold text-branco-sal">
+      <div className="flex flex-col gap-1.5 p-4">
+        <span className="price-tag w-fit rounded-sm bg-vermelho-brasa px-2.5 py-1 text-xs text-branco-sal">
           {desconto}
         </span>
         <h3 className="font-semibold text-preto-wagyu">{promotion.title}</h3>
