@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useCart } from "@/lib/cart-context";
 import { formatBRL } from "@/lib/format";
@@ -15,6 +15,25 @@ export default function OrcamentoPage() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const [customerId, setCustomerId] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadProfile() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      setCustomerId(user.id);
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("name, phone")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (profile?.name) setName(profile.name);
+      if (profile?.phone) setPhone(profile.phone);
+    }
+    loadProfile();
+  }, [supabase]);
 
   const total = items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
 
@@ -30,6 +49,7 @@ export default function OrcamentoPage() {
     const orderId = crypto.randomUUID();
     const { error: orderError } = await supabase.from("orders").insert({
       id: orderId,
+      customer_id: customerId,
       customer_name: name,
       customer_phone: phone,
       notes,

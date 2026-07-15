@@ -69,3 +69,62 @@ export type CartItem = {
   unitPrice: number;
   quantity: number;
 };
+
+export type OrderStatus =
+  | "novo"
+  | "em_analise"
+  | "confirmado"
+  | "entregue"
+  | "cancelado";
+
+export type Order = {
+  id: string;
+  customer_id: string | null;
+  customer_name: string;
+  customer_phone: string;
+  status: OrderStatus;
+  total_estimated: number;
+  notes: string | null;
+  whatsapp_sent_at: string | null;
+  created_at: string;
+};
+
+export type OrderItemRow = {
+  id: string;
+  order_id: string;
+  product_id: string;
+  quantity: number;
+  unit_price_snapshot: number;
+  subtotal: number;
+  products: { name: string } | null;
+};
+
+export type PointsTransaction = {
+  id: string;
+  customer_id: string;
+  order_id: string | null;
+  type: "ganho" | "resgate" | "ajuste";
+  points: number;
+  description: string | null;
+  created_at: string;
+};
+
+export type Profile = {
+  id: string;
+  name: string | null;
+  phone: string | null;
+  role: "cliente" | "admin";
+  points_balance: number;
+  created_at: string;
+};
+
+export type Reward = {
+  id: string;
+  title: string;
+  description: string | null;
+  points_cost: number;
+  reward_type: "desconto_percent" | "desconto_fixo" | "brinde";
+  value: number | null;
+  stock: number | null;
+  is_active: boolean;
+};

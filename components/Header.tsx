@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCart } from "@/lib/cart-context";
+import { createClient } from "@/lib/supabase/client";
 
 const links = [
   { href: "/catalogo", label: "Catálogo" },
@@ -15,8 +16,22 @@ const links = [
 
 export function Header() {
   const { items } = useCart();
+  const supabase = useMemo(() => createClient(), []);
   const [open, setOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const totalItens = items.reduce((sum, i) => sum + i.quantity, 0);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setLoggedIn(!!data.user));
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+      setLoggedIn(!!session?.user);
+    });
+    return () => subscription.subscription.unsubscribe();
+  }, [supabase]);
+
+  const accountLink = loggedIn
+    ? { href: "/minha-conta", label: "Minha Conta" }
+    : { href: "/entrar", label: "Entrar" };
 
   return (
     <header className="border-b border-cinza-osso bg-branco-sal">
@@ -51,6 +66,12 @@ export function Header() {
             </Link>
           ))}
           <Link
+            href={accountLink.href}
+            className="text-sm text-preto-wagyu hover:text-vermelho-brasa"
+          >
+            {accountLink.label}
+          </Link>
+          <Link
             href="/orcamento"
             className="rounded-full bg-vermelho-brasa px-4 py-2 text-sm font-semibold text-branco-sal hover:bg-sangue-nobre"
           >
@@ -71,6 +92,13 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href={accountLink.href}
+            className="text-sm text-preto-wagyu"
+            onClick={() => setOpen(false)}
+          >
+            {accountLink.label}
+          </Link>
           <Link
             href="/orcamento"
             className="rounded-full bg-vermelho-brasa px-4 py-2 text-center text-sm font-semibold text-branco-sal"
