@@ -47,20 +47,3 @@ h1, h2, h3 {
   font-family: var(--font-sans), Arial, sans-serif;
   font-weight: 700;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes ember-pulse {
-    0%, 100% {
-      opacity: 0.16;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.26;
-      transform: scale(1.035);
-    }
-  }
-
-  .animate-ember {
-    animation: ember-pulse 4.5s ease-in-out infinite;
-  }
-}

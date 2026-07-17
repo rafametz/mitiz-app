@@ -43,42 +43,39 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative overflow-hidden bg-preto-wagyu">
-        <div className="mx-auto grid max-w-5xl gap-10 px-4 py-16 sm:py-24 md:grid-cols-2 md:items-center">
-          <div>
-            <p className="eyebrow text-vermelho-brasa">Açougue artesanal</p>
-            <h1 className="mt-3 text-4xl leading-[1.05] text-branco-sal sm:text-5xl">
-              Da brasa ao seu churrasco.
-            </h1>
-            <p className="mt-4 max-w-md text-cinza-osso">
-              Cortes selecionados, calculadora de churrasco e pontos a cada
-              compra — tudo num só lugar.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/calculadora"
-                className="rounded-full bg-vermelho-brasa px-6 py-3 font-semibold text-branco-sal shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-sangue-nobre"
-              >
-                Calcular meu churrasco
-              </Link>
-              <Link
-                href="/catalogo"
-                className="rounded-full border border-cinza-ferro px-6 py-3 font-semibold text-branco-sal hover:border-branco-sal"
-              >
-                Ver catálogo
-              </Link>
-            </div>
-          </div>
+      <section className="relative flex h-[520px] items-center overflow-hidden sm:h-[600px]">
+        <Image
+          src="/hero-carne.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-preto-wagyu/95 via-preto-wagyu/60 to-preto-wagyu/10" />
 
-          <div className="relative hidden h-64 items-center justify-center md:flex">
-            <div className="animate-ember absolute h-56 w-56 rounded-full bg-vermelho-brasa blur-3xl" />
-            <Image
-              src="/mitiz-simbolo.svg"
-              alt=""
-              width={280}
-              height={340}
-              className="relative h-64 w-auto opacity-90 invert"
-            />
+        <div className="relative mx-auto w-full max-w-5xl px-4">
+          <h1 className="text-3xl font-bold italic leading-[1.05] text-branco-sal sm:whitespace-nowrap sm:text-5xl md:text-6xl">
+            Tudo para o seu churrasco
+            <br />
+            em um só lugar!
+          </h1>
+          <p className="mt-4 max-w-md text-cinza-osso">
+            Carnes selecionadas, qualidade garantida e sabor que você sente em
+            cada detalhe.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/calculadora"
+              className="rounded-full bg-vermelho-brasa px-6 py-3 font-semibold text-branco-sal shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-sangue-nobre"
+            >
+              Calcular meu churrasco
+            </Link>
+            <Link
+              href="/catalogo"
+              className="rounded-full border border-cinza-osso px-6 py-3 font-semibold text-branco-sal hover:border-branco-sal"
+            >
+              Ver catálogo
+            </Link>
           </div>
         </div>
       </section>
