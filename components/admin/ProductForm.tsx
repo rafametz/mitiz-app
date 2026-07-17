@@ -15,6 +15,14 @@ export function ProductForm({
 }) {
   return (
     <form action={action} className="flex max-w-lg flex-col gap-3">
+      <ImageUploadField
+        name="image_url"
+        label="Foto do produto"
+        folder="products"
+        defaultValue={product?.image_url}
+        aspect="square"
+      />
+
       <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
         Nome
         <input
@@ -49,13 +57,6 @@ export function ProductForm({
           className="rounded border border-cinza-osso px-3 py-2"
         />
       </label>
-
-      <ImageUploadField
-        name="image_url"
-        label="Foto do produto"
-        folder="products"
-        defaultValue={product?.image_url}
-      />
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1 text-sm text-preto-wagyu">

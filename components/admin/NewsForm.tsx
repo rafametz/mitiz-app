@@ -10,6 +10,13 @@ export function NewsForm({
 }) {
   return (
     <form action={action} className="flex max-w-lg flex-col gap-3">
+      <ImageUploadField
+        name="image_url"
+        label="Imagem da novidade"
+        folder="news"
+        defaultValue={item?.image_url}
+      />
+
       <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
         Título
         <input
@@ -29,13 +36,6 @@ export function NewsForm({
           className="rounded border border-cinza-osso px-3 py-2"
         />
       </label>
-
-      <ImageUploadField
-        name="image_url"
-        label="Imagem da novidade"
-        folder="news"
-        defaultValue={item?.image_url}
-      />
 
       <label className="flex items-center gap-2 text-sm text-preto-wagyu">
         <input type="checkbox" name="is_active" defaultChecked={item?.is_active ?? true} />

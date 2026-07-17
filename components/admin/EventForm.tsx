@@ -10,6 +10,13 @@ export function EventForm({
 }) {
   return (
     <form action={action} className="flex max-w-lg flex-col gap-3">
+      <ImageUploadField
+        name="image_url"
+        label="Imagem do evento"
+        folder="events"
+        defaultValue={event?.image_url}
+      />
+
       <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
         Título
         <input
@@ -49,13 +56,6 @@ export function EventForm({
           />
         </label>
       </div>
-
-      <ImageUploadField
-        name="image_url"
-        label="Imagem do evento"
-        folder="events"
-        defaultValue={event?.image_url}
-      />
 
       <label className="flex items-center gap-2 text-sm text-preto-wagyu">
         <input type="checkbox" name="is_active" defaultChecked={event?.is_active ?? true} />

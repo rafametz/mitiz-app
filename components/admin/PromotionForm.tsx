@@ -12,6 +12,13 @@ export function PromotionForm({
 }) {
   return (
     <form action={action} className="flex max-w-lg flex-col gap-3">
+      <ImageUploadField
+        name="image_url"
+        label="Imagem da promoção"
+        folder="promotions"
+        defaultValue={promotion?.image_url}
+      />
+
       <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
         Título
         <input
@@ -93,13 +100,6 @@ export function PromotionForm({
           />
         </label>
       </div>
-
-      <ImageUploadField
-        name="image_url"
-        label="Imagem da promoção"
-        folder="promotions"
-        defaultValue={promotion?.image_url}
-      />
 
       <label className="flex items-center gap-2 text-sm text-preto-wagyu">
         <input type="checkbox" name="is_active" defaultChecked={promotion?.is_active ?? true} />
