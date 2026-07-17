@@ -1,4 +1,5 @@
 import type { Product, Promotion } from "@/lib/types";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 
 export function PromotionForm({
   promotion,
@@ -92,6 +93,13 @@ export function PromotionForm({
           />
         </label>
       </div>
+
+      <ImageUploadField
+        name="image_url"
+        label="Imagem da promoção"
+        folder="promotions"
+        defaultValue={promotion?.image_url}
+      />
 
       <label className="flex items-center gap-2 text-sm text-preto-wagyu">
         <input type="checkbox" name="is_active" defaultChecked={promotion?.is_active ?? true} />

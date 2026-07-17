@@ -1,4 +1,5 @@
 import type { EventItem } from "@/lib/types";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 
 export function EventForm({
   event,
@@ -48,6 +49,13 @@ export function EventForm({
           />
         </label>
       </div>
+
+      <ImageUploadField
+        name="image_url"
+        label="Imagem do evento"
+        folder="events"
+        defaultValue={event?.image_url}
+      />
 
       <label className="flex items-center gap-2 text-sm text-preto-wagyu">
         <input type="checkbox" name="is_active" defaultChecked={event?.is_active ?? true} />

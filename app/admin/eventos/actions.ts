@@ -3,16 +3,18 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/supabase/admin-guard";
+import { deleteStorageImage } from "@/lib/supabase/storage-helpers";
 
 function parseEvent(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim() || null;
   const event_date = String(formData.get("event_date") ?? "");
   const location = String(formData.get("location") ?? "").trim() || null;
+  const image_url = String(formData.get("image_url") ?? "").trim() || null;
   const is_active = formData.get("is_active") === "on";
   if (!title) throw new Error("Título é obrigatório");
   if (!event_date) throw new Error("Data é obrigatória");
-  return { title, description, event_date, location, is_active };
+  return { title, description, event_date, location, image_url, is_active };
 }
 
 export async function createEvent(formData: FormData) {
@@ -31,6 +33,13 @@ export async function updateEvent(eventId: string, formData: FormData) {
 
 export async function deleteEvent(eventId: string) {
   const { supabase } = await requireAdmin();
+  const { data: event } = await supabase
+    .from("events")
+    .select("image_url")
+    .eq("id", eventId)
+    .maybeSingle();
+
   await supabase.from("events").delete().eq("id", eventId);
+  await deleteStorageImage(supabase, event?.image_url);
   revalidatePath("/admin/eventos");
 }

@@ -1,4 +1,5 @@
 import type { Category, Product } from "@/lib/types";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 
 const MEAT_TYPES = ["bovina", "suina", "frango", "linguica", "outros"] as const;
 const UNIT_TYPES = ["kg", "unidade", "pacote"] as const;
@@ -48,6 +49,13 @@ export function ProductForm({
           className="rounded border border-cinza-osso px-3 py-2"
         />
       </label>
+
+      <ImageUploadField
+        name="image_url"
+        label="Foto do produto"
+        folder="products"
+        defaultValue={product?.image_url}
+      />
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1 text-sm text-preto-wagyu">

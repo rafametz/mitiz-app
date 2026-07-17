@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/supabase/admin-guard";
+import { deleteStorageImage } from "@/lib/supabase/storage-helpers";
 
 function parsePromotion(formData: FormData) {
   const product_id = String(formData.get("product_id") ?? "") || null;
@@ -12,11 +13,22 @@ function parsePromotion(formData: FormData) {
   const discount_value = Number(formData.get("discount_value") ?? 0);
   const starts_at = String(formData.get("starts_at") ?? "") || null;
   const ends_at = String(formData.get("ends_at") ?? "") || null;
+  const image_url = String(formData.get("image_url") ?? "").trim() || null;
   const is_active = formData.get("is_active") === "on";
 
   if (!title) throw new Error("Título é obrigatório");
 
-  return { product_id, title, description, discount_type, discount_value, starts_at, ends_at, is_active };
+  return {
+    product_id,
+    title,
+    description,
+    discount_type,
+    discount_value,
+    starts_at,
+    ends_at,
+    image_url,
+    is_active,
+  };
 }
 
 export async function createPromotion(formData: FormData) {
@@ -35,6 +47,13 @@ export async function updatePromotion(promotionId: string, formData: FormData) {
 
 export async function deletePromotion(promotionId: string) {
   const { supabase } = await requireAdmin();
+  const { data: promotion } = await supabase
+    .from("promotions")
+    .select("image_url")
+    .eq("id", promotionId)
+    .maybeSingle();
+
   await supabase.from("promotions").delete().eq("id", promotionId);
+  await deleteStorageImage(supabase, promotion?.image_url);
   revalidatePath("/admin/promocoes");
 }
