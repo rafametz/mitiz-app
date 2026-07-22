@@ -33,14 +33,14 @@ export default async function CatalogoPage({
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-bold text-preto-wagyu">Catálogo</h1>
-      {(categoriesError || productsError) && (
-        <pre className="mb-4 whitespace-pre-wrap rounded border border-vermelho-brasa bg-marmoreio p-3 text-xs text-vermelho-brasa">
-          DEBUG categoriesError: {JSON.stringify(categoriesError)}
-          {"\n"}DEBUG productsError: {JSON.stringify(productsError)}
-          {"\n"}DEBUG url: {process.env.NEXT_PUBLIC_SUPABASE_URL}
-          {"\n"}DEBUG keyLength: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length}
-        </pre>
-      )}
+      <pre className="mb-4 whitespace-pre-wrap rounded border border-vermelho-brasa bg-marmoreio p-3 text-xs text-vermelho-brasa">
+        DEBUG categoriesError: {JSON.stringify(categoriesError)}
+        {"\n"}DEBUG categoriesCount: {categories?.length ?? "null"}
+        {"\n"}DEBUG productsError: {JSON.stringify(productsError)}
+        {"\n"}DEBUG productsCount: {products?.length ?? "null"}
+        {"\n"}DEBUG url: {process.env.NEXT_PUBLIC_SUPABASE_URL}
+        {"\n"}DEBUG keyLength: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length}
+      </pre>
 
       {categories && categories.length > 0 && (
         <div className="mb-6 flex flex-wrap gap-2">
