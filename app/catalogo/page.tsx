@@ -11,7 +11,7 @@ export default async function CatalogoPage({
   const { categoria } = await searchParams;
   const supabase = await createClient();
 
-  const { data: categories } = await supabase
+  const { data: categories, error: categoriesError } = await supabase
     .from("categories")
     .select("*")
     .order("sort_order")
@@ -28,11 +28,19 @@ export default async function CatalogoPage({
     if (cat) query = query.eq("category_id", cat.id);
   }
 
-  const { data: products } = await query.returns<Product[]>();
+  const { data: products, error: productsError } = await query.returns<Product[]>();
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-bold text-preto-wagyu">Catálogo</h1>
+      {(categoriesError || productsError) && (
+        <pre className="mb-4 whitespace-pre-wrap rounded border border-vermelho-brasa bg-marmoreio p-3 text-xs text-vermelho-brasa">
+          DEBUG categoriesError: {JSON.stringify(categoriesError)}
+          {"\n"}DEBUG productsError: {JSON.stringify(productsError)}
+          {"\n"}DEBUG url: {process.env.NEXT_PUBLIC_SUPABASE_URL}
+          {"\n"}DEBUG keyLength: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length}
+        </pre>
+      )}
 
       {categories && categories.length > 0 && (
         <div className="mb-6 flex flex-wrap gap-2">
