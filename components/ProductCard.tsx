@@ -23,7 +23,7 @@ export function ProductCard({ product }: { product: Product }) {
         )}
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-3">
-        <p className="eyebrow text-cinza-ferro">{product.meat_type}</p>
+        {product.brand && <p className="eyebrow text-cinza-ferro">{product.brand}</p>}
         <h3 className="font-semibold text-preto-wagyu">{product.name}</h3>
         <span className="price-tag mt-auto w-fit rounded-sm bg-preto-wagyu px-2 py-1 text-sm text-branco-sal">
           {formatBRL(product.price_per_unit)} / {product.unit_type}

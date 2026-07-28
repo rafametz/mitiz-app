@@ -64,7 +64,9 @@ export default function CalculadoraPage() {
         : 0;
       const gramsFinal = gramsTotal / selectedTypes.length;
       const kg = gramsFinal / 1000;
-      const suggestedProducts = products.filter((p) => p.meat_type === type);
+      const suggestedProducts = rule?.category_id
+        ? products.filter((p) => p.category_id === rule.category_id)
+        : [];
       return { type, kg, suggestedProducts };
     });
   }, [selectedTypes, rules, adults, children, products]);

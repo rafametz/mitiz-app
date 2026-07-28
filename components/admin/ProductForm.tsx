@@ -1,7 +1,7 @@
 import type { Category, Product } from "@/lib/types";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { CurrencyInput } from "@/components/admin/CurrencyInput";
 
-const MEAT_TYPES = ["bovina", "suina", "frango", "linguica", "outros"] as const;
 const UNIT_TYPES = ["kg", "unidade", "pacote"] as const;
 
 export function ProductForm({
@@ -60,22 +60,7 @@ export function ProductForm({
 
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
-          Tipo de carne
-          <select
-            name="meat_type"
-            defaultValue={product?.meat_type ?? "bovina"}
-            className="rounded border border-cinza-osso px-3 py-2"
-          >
-            {MEAT_TYPES.map((m) => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
-          Unidade
+          Unidade de medida
           <select
             name="unit_type"
             defaultValue={product?.unit_type ?? "kg"}
@@ -88,17 +73,39 @@ export function ProductForm({
             ))}
           </select>
         </label>
+
+        <CurrencyInput
+          name="price_per_unit"
+          label="Preço por unidade"
+          defaultValue={product?.price_per_unit}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
+          Código do produto
+          <input
+            name="product_code"
+            defaultValue={product?.product_code ?? ""}
+            className="rounded border border-cinza-osso px-3 py-2"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
+          NCM
+          <input
+            name="ncm"
+            defaultValue={product?.ncm ?? ""}
+            className="rounded border border-cinza-osso px-3 py-2"
+          />
+        </label>
       </div>
 
       <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
-        Preço por unidade (R$)
+        Fabricante / Marca
         <input
-          type="number"
-          name="price_per_unit"
-          step="0.01"
-          min="0"
-          required
-          defaultValue={product?.price_per_unit}
+          name="brand"
+          defaultValue={product?.brand ?? ""}
           className="rounded border border-cinza-osso px-3 py-2"
         />
       </label>

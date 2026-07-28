@@ -16,7 +16,9 @@ export type Product = {
   description: string | null;
   unit_type: UnitType;
   price_per_unit: number;
-  meat_type: MeatType;
+  ncm: string | null;
+  product_code: string | null;
+  brand: string | null;
   image_url: string | null;
   is_active: boolean;
   is_featured: boolean;
@@ -57,6 +59,7 @@ export type EventItem = {
 export type BarbecueCalculatorRule = {
   id: string;
   meat_type: MeatType;
+  category_id: string | null;
   grams_per_adult: number;
   grams_per_child: number;
   sort_order: number;

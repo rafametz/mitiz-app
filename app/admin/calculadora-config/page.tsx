@@ -1,20 +1,24 @@
 import { createClient } from "@/lib/supabase/server";
 import { updateCalculatorRule } from "./actions";
-import type { BarbecueCalculatorRule } from "@/lib/types";
+import type { BarbecueCalculatorRule, Category } from "@/lib/types";
 
 export default async function AdminCalculadoraConfigPage() {
   const supabase = await createClient();
-  const { data: rules } = await supabase
-    .from("barbecue_calculator_rules")
-    .select("*")
-    .order("sort_order")
-    .returns<BarbecueCalculatorRule[]>();
+  const [{ data: rules }, { data: categories }] = await Promise.all([
+    supabase
+      .from("barbecue_calculator_rules")
+      .select("*")
+      .order("sort_order")
+      .returns<BarbecueCalculatorRule[]>(),
+    supabase.from("categories").select("*").order("sort_order").returns<Category[]>(),
+  ]);
 
   return (
     <div>
       <h1 className="mb-2 text-2xl font-bold text-preto-wagyu">Calculadora de Churrasco</h1>
       <p className="mb-6 text-cinza-ferro">
-        Ajuste quantos gramas por pessoa a calculadora sugere para cada tipo de carne.
+        Ajuste quantos gramas por pessoa a calculadora sugere para cada tipo de
+        carne, e qual categoria de produtos ela deve sugerir.
       </p>
 
       <ul className="flex flex-col gap-3">
@@ -42,6 +46,21 @@ export default async function AdminCalculadoraConfigPage() {
                   defaultValue={rule.grams_per_child}
                   className="w-32 rounded border border-cinza-osso px-3 py-2"
                 />
+              </label>
+              <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
+                Categoria de produtos sugerida
+                <select
+                  name="category_id"
+                  defaultValue={rule.category_id ?? ""}
+                  className="rounded border border-cinza-osso px-3 py-2"
+                >
+                  <option value="">Nenhuma</option>
+                  {categories?.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
               </label>
               <button className="rounded-full bg-vermelho-brasa px-4 py-2 text-sm font-semibold text-branco-sal hover:bg-sangue-nobre">
                 Salvar

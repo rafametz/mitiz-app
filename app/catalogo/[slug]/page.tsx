@@ -40,9 +40,9 @@ export default async function ProductPage({
 
       <div className="flex flex-col gap-3">
         <h1 className="text-2xl font-bold text-preto-wagyu">{product.name}</h1>
-        <p className="text-sm capitalize text-cinza-ferro">
-          {product.meat_type}
-        </p>
+        {product.brand && (
+          <p className="text-sm text-cinza-ferro">{product.brand}</p>
+        )}
         {product.description && (
           <p className="text-preto-wagyu">{product.description}</p>
         )}
