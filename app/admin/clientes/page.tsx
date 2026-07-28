@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { awardPoints } from "../orcamentos/actions";
+import { formatDate } from "@/lib/format";
+import { ExportClientsButton } from "@/components/admin/ExportClientsButton";
 import type { Profile } from "@/lib/types";
 
 export default async function AdminClientesPage() {
@@ -13,46 +15,47 @@ export default async function AdminClientesPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-preto-wagyu">Clientes</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-preto-wagyu">Clientes</h1>
+        <ExportClientsButton clientes={clientes ?? []} />
+      </div>
 
-      <ul className="flex flex-col gap-3">
-        {clientes?.map((c) => (
-          <li key={c.id} className="rounded border border-cinza-osso p-4">
-            <div className="mb-2 flex items-center justify-between">
-              <div>
-                <p className="font-semibold text-preto-wagyu">{c.name ?? "Sem nome"}</p>
-                <p className="text-sm text-cinza-ferro">{c.phone ?? "Sem telefone"}</p>
-              </div>
-              <p className="text-lg font-bold text-vinho-defumado">{c.points_balance} pts</p>
-            </div>
-            <form action={awardPoints.bind(null, c.id, null)} className="flex flex-wrap items-end gap-3">
-              <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
-                Ajustar pontos
-                <input
-                  type="number"
-                  name="points"
-                  required
-                  className="w-28 rounded border border-cinza-osso px-3 py-2"
-                />
-              </label>
-              <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
-                Motivo
-                <input
-                  name="description"
-                  defaultValue="Ajuste manual"
-                  className="rounded border border-cinza-osso px-3 py-2"
-                />
-              </label>
-              <button className="rounded-full bg-preto-wagyu px-4 py-2 text-sm font-semibold text-branco-sal hover:bg-cinza-ferro">
-                Aplicar
-              </button>
-            </form>
-          </li>
-        ))}
+      <div className="overflow-x-auto rounded-lg border border-cinza-osso">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-marmoreio text-preto-wagyu">
+            <tr>
+              <th className="px-4 py-2">Nome</th>
+              <th className="px-4 py-2">E-mail</th>
+              <th className="px-4 py-2">WhatsApp</th>
+              <th className="px-4 py-2">Cadastro</th>
+              <th className="px-4 py-2">Pontos</th>
+              <th className="px-4 py-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {clientes?.map((c) => (
+              <tr key={c.id} className="border-t border-cinza-osso">
+                <td className="px-4 py-2 text-preto-wagyu">{c.name ?? "Sem nome"}</td>
+                <td className="px-4 py-2 text-cinza-ferro">{c.email ?? "—"}</td>
+                <td className="px-4 py-2 text-cinza-ferro">{c.phone ?? "—"}</td>
+                <td className="px-4 py-2 text-cinza-ferro">{formatDate(c.created_at)}</td>
+                <td className="px-4 py-2 font-bold text-vinho-defumado">{c.points_balance} pts</td>
+                <td className="px-4 py-2 text-right">
+                  <Link
+                    href={`/admin/clientes/${c.id}`}
+                    className="text-vinho-defumado hover:underline"
+                  >
+                    Ver detalhes
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         {(!clientes || clientes.length === 0) && (
-          <p className="text-cinza-ferro">Nenhum cliente cadastrado ainda.</p>
+          <p className="p-4 text-cinza-ferro">Nenhum cliente cadastrado ainda.</p>
         )}
-      </ul>
+      </div>
     </div>
   );
 }

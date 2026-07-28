@@ -113,6 +113,7 @@ export type Profile = {
   id: string;
   name: string | null;
   phone: string | null;
+  email: string | null;
   role: "cliente" | "admin";
   points_balance: number;
   created_at: string;

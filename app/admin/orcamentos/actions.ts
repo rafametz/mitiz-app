@@ -45,4 +45,5 @@ export async function awardPoints(
 
   if (orderId) revalidatePath(`/admin/orcamentos/${orderId}`);
   revalidatePath("/admin/clientes");
+  revalidatePath(`/admin/clientes/${customerId}`);
 }
