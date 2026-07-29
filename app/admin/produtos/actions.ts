@@ -12,6 +12,8 @@ function parseProduct(formData: FormData) {
   const description = String(formData.get("description") ?? "").trim() || null;
   const unit_type = String(formData.get("unit_type") ?? "kg");
   const price_per_unit = Number(formData.get("price_per_unit") ?? 0);
+  const gramsPerUnitRaw = String(formData.get("grams_per_unit") ?? "").trim();
+  const grams_per_unit = gramsPerUnitRaw ? Number(gramsPerUnitRaw) : null;
   const product_code = String(formData.get("product_code") ?? "").trim() || null;
   const ncm = String(formData.get("ncm") ?? "").trim() || null;
   const brand = String(formData.get("brand") ?? "").trim() || null;
@@ -27,6 +29,7 @@ function parseProduct(formData: FormData) {
     description,
     unit_type,
     price_per_unit,
+    grams_per_unit,
     product_code,
     ncm,
     brand,

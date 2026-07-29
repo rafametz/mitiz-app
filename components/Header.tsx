@@ -20,7 +20,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const totalItens = items.reduce((sum, i) => sum + i.quantity, 0);
+  const totalItens = Math.round(items.reduce((sum, i) => sum + i.quantity, 0) * 1000) / 1000;
 
   useEffect(() => {
     async function loadAuthState(userId: string | undefined) {

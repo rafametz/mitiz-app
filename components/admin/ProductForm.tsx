@@ -81,6 +81,22 @@ export function ProductForm({
         />
       </div>
 
+      <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
+        Peso por unidade (gramas)
+        <input
+          type="number"
+          min={0}
+          name="grams_per_unit"
+          defaultValue={product?.grams_per_unit ?? ""}
+          className="rounded border border-cinza-osso px-3 py-2"
+        />
+        <span className="text-xs text-cinza-ferro">
+          Preencha quando a unidade de medida não for kg (ex: linguiça em
+          gitos, pão de alho). Usado pela calculadora de churrasco para
+          sugerir quantas unidades comprar.
+        </span>
+      </label>
+
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
           Código do produto

@@ -1,4 +1,3 @@
-export type MeatType = "bovina" | "suina" | "frango" | "linguica" | "outros";
 export type UnitType = "kg" | "unidade" | "pacote";
 
 export type Category = {
@@ -19,6 +18,7 @@ export type Product = {
   ncm: string | null;
   product_code: string | null;
   brand: string | null;
+  grams_per_unit: number | null;
   image_url: string | null;
   is_active: boolean;
   is_featured: boolean;
@@ -56,12 +56,23 @@ export type EventItem = {
   is_active: boolean;
 };
 
-export type BarbecueCalculatorRule = {
+export type CalculatorSettings = {
   id: string;
-  meat_type: MeatType;
-  category_id: string | null;
   grams_per_adult: number;
   grams_per_child: number;
+  bread_product_id: string | null;
+  bread_units_per_package: number;
+  cheese_product_id: string | null;
+  cheese_people_per_package: number;
+};
+
+export type CalculatorGroup = {
+  id: string;
+  key: string;
+  label: string;
+  percent: number;
+  category_id: string | null;
+  max_selections: number;
   sort_order: number;
 };
 
