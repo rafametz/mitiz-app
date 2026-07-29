@@ -3,12 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
+import { QuantityInput } from "@/components/QuantityInput";
 import type { Product } from "@/lib/types";
 
-export function AddToCartForm({ product }: { product: Product }) {
+export function AddToCartForm({
+  product,
+  unitPrice,
+}: {
+  product: Product;
+  unitPrice?: number;
+}) {
   const { addItem } = useCart();
   const router = useRouter();
-  const [quantity, setQuantity] = useState(product.unit_type === "kg" ? 1 : 1);
+  const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
   function handleAdd() {
@@ -16,7 +23,7 @@ export function AddToCartForm({ product }: { product: Product }) {
       productId: product.id,
       name: product.name,
       unitType: product.unit_type,
-      unitPrice: product.price_per_unit,
+      unitPrice: unitPrice ?? product.price_per_unit,
       quantity,
     });
     setAdded(true);
@@ -25,17 +32,14 @@ export function AddToCartForm({ product }: { product: Product }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <label className="flex items-center gap-2 text-sm text-cinza-ferro">
-        Quantidade ({product.unit_type})
-        <input
-          type="number"
-          min={0.1}
-          step={product.unit_type === "kg" ? 0.1 : 1}
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          className="w-24 rounded border border-cinza-osso px-2 py-1"
+      <div className="flex flex-col gap-1 text-sm text-cinza-ferro">
+        Quantidade
+        <QuantityInput
+          defaultValue={1}
+          unitType={product.unit_type}
+          onChange={setQuantity}
         />
-      </label>
+      </div>
       <div className="flex gap-3">
         <button
           onClick={handleAdd}

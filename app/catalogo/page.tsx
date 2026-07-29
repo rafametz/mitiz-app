@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/ProductCard";
-import type { Category, Product } from "@/lib/types";
+import { buildActivePromotionMap } from "@/lib/promotions";
+import type { Category, Product, Promotion } from "@/lib/types";
 
 export default async function CatalogoPage({
   searchParams,
@@ -29,6 +30,14 @@ export default async function CatalogoPage({
   }
 
   const { data: products } = await query.returns<Product[]>();
+
+  const { data: promotions } = await supabase
+    .from("promotions")
+    .select("*")
+    .eq("is_active", true)
+    .not("product_id", "is", null)
+    .returns<Promotion[]>();
+  const promotionMap = buildActivePromotionMap(promotions ?? []);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -65,7 +74,7 @@ export default async function CatalogoPage({
       {products && products.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
+            <ProductCard key={p.id} product={p} promotion={promotionMap.get(p.id)} />
           ))}
         </div>
       ) : (

@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AddToCartForm } from "@/components/AddToCartForm";
 import { formatBRL } from "@/lib/format";
-import type { Product } from "@/lib/types";
+import { computeDiscountedPrice, isPromotionActive } from "@/lib/promotions";
+import type { Product, Promotion } from "@/lib/types";
 
 export default async function ProductPage({
   params,
@@ -20,6 +21,17 @@ export default async function ProductPage({
     .maybeSingle<Product>();
 
   if (!product) notFound();
+
+  const { data: promotions } = await supabase
+    .from("promotions")
+    .select("*")
+    .eq("product_id", product.id)
+    .eq("is_active", true)
+    .returns<Promotion[]>();
+  const promotion = (promotions ?? []).find(isPromotionActive);
+  const discountedPrice = promotion
+    ? computeDiscountedPrice(product.price_per_unit, promotion)
+    : null;
 
   return (
     <div className="mx-auto grid max-w-4xl gap-8 px-4 py-8 sm:grid-cols-2">
@@ -46,11 +58,22 @@ export default async function ProductPage({
         {product.description && (
           <p className="text-preto-wagyu">{product.description}</p>
         )}
-        <p className="text-xl font-bold text-vinho-defumado">
-          {formatBRL(product.price_per_unit)} / {product.unit_type}
-        </p>
+        {discountedPrice !== null ? (
+          <div className="flex items-center gap-3">
+            <span className="text-cinza-ferro line-through">
+              {formatBRL(product.price_per_unit)}
+            </span>
+            <span className="text-xl font-bold text-vermelho-brasa">
+              {formatBRL(discountedPrice)} / {product.unit_type}
+            </span>
+          </div>
+        ) : (
+          <p className="text-xl font-bold text-vinho-defumado">
+            {formatBRL(product.price_per_unit)} / {product.unit_type}
+          </p>
+        )}
 
-        <AddToCartForm product={product} />
+        <AddToCartForm product={product} unitPrice={discountedPrice ?? undefined} />
       </div>
     </div>
   );

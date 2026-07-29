@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useCart } from "@/lib/cart-context";
+import { QuantityInput } from "@/components/QuantityInput";
 import { formatBRL } from "@/lib/format";
 
 export default function OrcamentoPage() {
@@ -152,15 +153,10 @@ export default function OrcamentoPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <input
-                    type="number"
-                    min={0.1}
-                    step={item.unitType === "kg" ? 0.1 : 1}
-                    value={item.quantity}
-                    onChange={(e) =>
-                      updateQuantity(item.productId, Number(e.target.value))
-                    }
-                    className="w-20 rounded border border-cinza-osso bg-branco-sal px-2 py-1"
+                  <QuantityInput
+                    defaultValue={item.quantity}
+                    unitType={item.unitType}
+                    onChange={(q) => updateQuantity(item.productId, q)}
                   />
                   <button
                     onClick={() => removeItem(item.productId)}

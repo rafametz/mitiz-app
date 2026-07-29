@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { PromotionCard } from "@/components/PromotionCard";
 import { NewsCard } from "@/components/NewsCard";
 import { EventCard } from "@/components/EventCard";
+import { buildActivePromotionMap, isPromotionActive } from "@/lib/promotions";
 import type { Product, Promotion, NewsItem, EventItem } from "@/lib/types";
 
 export default async function Home() {
@@ -23,7 +24,6 @@ export default async function Home() {
         .from("promotions")
         .select("*")
         .eq("is_active", true)
-        .limit(3)
         .returns<Promotion[]>(),
       supabase
         .from("news")
@@ -40,6 +40,9 @@ export default async function Home() {
         .limit(3)
         .returns<EventItem[]>(),
     ]);
+
+  const activePromotions = (promotions ?? []).filter(isPromotionActive);
+  const promotionMap = buildActivePromotionMap(activePromotions);
 
   return (
     <div className="flex flex-col">
@@ -80,10 +83,10 @@ export default async function Home() {
         </div>
       </section>
 
-      {promotions && promotions.length > 0 && (
+      {activePromotions.length > 0 && (
         <Section title="Promoções" href="/promocoes">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {promotions.map((p) => (
+            {activePromotions.slice(0, 3).map((p) => (
               <PromotionCard key={p.id} promotion={p} />
             ))}
           </div>
@@ -94,7 +97,7 @@ export default async function Home() {
         <Section title="Destaques do catálogo" href="/catalogo">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {featured.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} promotion={promotionMap.get(p.id)} />
             ))}
           </div>
         </Section>
