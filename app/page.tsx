@@ -6,12 +6,12 @@ import { PromotionCard } from "@/components/PromotionCard";
 import { NewsCard } from "@/components/NewsCard";
 import { EventCard } from "@/components/EventCard";
 import { buildActivePromotionMap, isPromotionActive } from "@/lib/promotions";
-import type { Product, Promotion, NewsItem, EventItem } from "@/lib/types";
+import type { Product, Promotion, NewsItem, EventItem, SiteSettings } from "@/lib/types";
 
 export default async function Home() {
   const supabase = await createClient();
 
-  const [{ data: featured }, { data: promotions }, { data: news }, { data: events }] =
+  const [{ data: featured }, { data: promotions }, { data: news }, { data: events }, { data: settings }] =
     await Promise.all([
       supabase
         .from("products")
@@ -39,6 +39,7 @@ export default async function Home() {
         .order("event_date", { ascending: true })
         .limit(3)
         .returns<EventItem[]>(),
+      supabase.from("site_settings").select("*").maybeSingle<SiteSettings>(),
     ]);
 
   const activePromotions = (promotions ?? []).filter(isPromotionActive);
@@ -48,7 +49,7 @@ export default async function Home() {
     <div className="flex flex-col">
       <section className="relative flex h-[520px] items-center overflow-hidden sm:h-[600px]">
         <Image
-          src="/hero-carne.jpg"
+          src={settings?.hero_image_url || "/hero-carne.jpg"}
           alt=""
           fill
           priority

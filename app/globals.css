@@ -17,10 +17,17 @@
   --color-marmoreio: #E9DFD5;
   --color-branco-sal: #F2ECE6;
   --color-vinho-defumado: #7A2E28;
-  --color-sangue-nobre: #8B1E1E;
-  --color-vermelho-brasa: #AF2B1E;
   --color-caramelo-rustico: #B58B57;
   --color-bege-marfim: #D6B47D;
+}
+
+/* Bloco de tema separado (sem "inline"): o Tailwind mantém essas duas
+   cores como variáveis CSS reais em vez de "achatar" o valor no build,
+   permitindo sobrescrevê-las em runtime via style inline no <html>
+   (usado pela personalização de cores no admin). */
+@theme {
+  --color-vermelho-brasa: #AF2B1E;
+  --color-sangue-nobre: #8B1E1E;
 }
 
 body {

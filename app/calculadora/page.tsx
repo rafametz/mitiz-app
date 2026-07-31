@@ -18,6 +18,15 @@ function suggestedQuantity(product: Product, kg: number) {
   return Math.max(1, Math.ceil(kg));
 }
 
+const SESSION_STORAGE_KEY = "mitiz-calculadora-state";
+
+type StoredState = {
+  adults: number | "";
+  children: number | "";
+  selectedByGroup: Record<string, string[]>;
+  calculated: boolean;
+};
+
 export default function CalculadoraPage() {
   const supabase = useMemo(() => createClient(), []);
   const { addItem } = useCart();
@@ -27,10 +36,12 @@ export default function CalculadoraPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [adults, setAdults] = useState(4);
-  const [children, setChildren] = useState(0);
+  const [adults, setAdults] = useState<number | "">("");
+  const [children, setChildren] = useState<number | "">("");
   const [selectedByGroup, setSelectedByGroup] = useState<Record<string, string[]>>({});
   const [added, setAdded] = useState<Record<string, boolean>>({});
+  const [calculated, setCalculated] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -51,6 +62,28 @@ export default function CalculadoraPage() {
     load();
   }, [supabase]);
 
+  useEffect(() => {
+    const raw = window.sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as StoredState;
+        setAdults(parsed.adults ?? "");
+        setChildren(parsed.children ?? "");
+        setSelectedByGroup(parsed.selectedByGroup ?? {});
+        setCalculated(parsed.calculated ?? false);
+      } catch {
+        // sessionStorage corrompido, ignora e começa do zero
+      }
+    }
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    const state: StoredState = { adults, children, selectedByGroup, calculated };
+    window.sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(state));
+  }, [hydrated, adults, children, selectedByGroup, calculated]);
+
   function toggleProduct(groupId: string, productId: string, maxSelections: number) {
     setSelectedByGroup((prev) => {
       const current = prev[groupId] ?? [];
@@ -62,9 +95,11 @@ export default function CalculadoraPage() {
     });
   }
 
-  const totalPeople = adults + children;
+  const adultsNum = adults === "" ? 0 : adults;
+  const childrenNum = children === "" ? 0 : children;
+  const totalPeople = adultsNum + childrenNum;
   const totalGrams = settings
-    ? adults * settings.grams_per_adult + children * settings.grams_per_child
+    ? adultsNum * settings.grams_per_adult + childrenNum * settings.grams_per_child
     : 0;
 
   const groupResults = useMemo(() => {
@@ -118,14 +153,14 @@ export default function CalculadoraPage() {
         quantidades certas de carne, pão de alho e queijo.
       </p>
 
-      <div className="mb-8 grid grid-cols-2 gap-4 rounded-lg border border-cinza-osso bg-marmoreio p-4">
+      <div className="mb-4 grid grid-cols-2 gap-4 rounded-lg border border-cinza-osso bg-marmoreio p-4">
         <label className="flex flex-col gap-1 text-sm text-preto-wagyu">
           Adultos
           <input
             type="number"
             min={0}
             value={adults}
-            onChange={(e) => setAdults(Number(e.target.value))}
+            onChange={(e) => setAdults(e.target.value === "" ? "" : Number(e.target.value))}
             className="rounded border border-cinza-osso bg-branco-sal px-3 py-2"
           />
         </label>
@@ -135,14 +170,26 @@ export default function CalculadoraPage() {
             type="number"
             min={0}
             value={children}
-            onChange={(e) => setChildren(Number(e.target.value))}
+            onChange={(e) => setChildren(e.target.value === "" ? "" : Number(e.target.value))}
             className="rounded border border-cinza-osso bg-branco-sal px-3 py-2"
           />
         </label>
       </div>
 
+      <button
+        type="button"
+        onClick={() => setCalculated(true)}
+        className="mb-8 w-fit rounded-full bg-vermelho-brasa px-6 py-3 font-semibold text-branco-sal shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-sangue-nobre"
+      >
+        Calcular
+      </button>
+
       {loading ? (
         <p className="text-cinza-ferro">Carregando...</p>
+      ) : !calculated ? (
+        <p className="text-cinza-ferro">
+          Informe a quantidade de pessoas e clique em Calcular.
+        </p>
       ) : !hasAnySuggestion ? (
         <p className="text-cinza-ferro">Informe ao menos uma pessoa para calcular.</p>
       ) : (

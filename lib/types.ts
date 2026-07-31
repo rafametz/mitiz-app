@@ -66,6 +66,13 @@ export type CalculatorSettings = {
   cheese_people_per_package: number;
 };
 
+export type SiteSettings = {
+  id: string;
+  hero_image_url: string | null;
+  primary_color: string;
+  primary_hover_color: string;
+};
+
 export type CalculatorGroup = {
   id: string;
   key: string;

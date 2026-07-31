@@ -12,6 +12,7 @@ const links = [
   { href: "/admin/clientes", label: "Clientes" },
   { href: "/admin/recompensas", label: "Recompensas" },
   { href: "/admin/calculadora-config", label: "Calculadora" },
+  { href: "/admin/personalizacao", label: "Personalização" },
 ];
 
 export default async function AdminLayout({
